@@ -83,9 +83,6 @@ namespace msa {
 
 			std::vector< NodePtr > children;	// all current children
 
-			void expand() {
-
-			}
 
 			// create a clone of the current state, apply action, and add as child
 			void add_child_with_action(const Action &new_action) {
