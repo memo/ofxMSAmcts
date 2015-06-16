@@ -6,20 +6,17 @@ using namespace msa::mcts;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	msa::LoopTimer::test();
+	//msa::LoopTimer::test();
 
-	img.load("test.jpg");
+	img.loadImage("test.jpg");
 	finder.setup("haarcascade_frontalface_default.xml");
 	finder.findHaarObjects(img);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	// create a Node from current state
+	// run uct mcts on current state and get best action
 	current_action = uct.run(current_state);
-
-	// get the best action
-	//current_action = uct.get_best_action();
 
 	// apply the action to the current state
 	current_state.apply_action(current_action);
@@ -31,7 +28,7 @@ void ofApp::draw(){
 	ofNoFill();
 	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
 		ofRectangle cur = finder.blobs[i].boundingRect;
-		ofDrawRectangle(cur.x, cur.y, cur.width, cur.height);
+		ofRect(cur.x, cur.y, cur.width, cur.height);
 	}
 }
 

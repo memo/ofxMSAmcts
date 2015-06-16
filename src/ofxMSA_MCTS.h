@@ -38,9 +38,10 @@ Some points in no particular order
 
 #include <random>
 
-#include "Node.h"
-#include "Action.h"
-#include "State.h"
+//#include "StateT.h"
+#include "TreeNodeT.h"
+//#include "Action.h"
+//#include "State.h"
 #include "MSALoopTimer.h"
 
 
@@ -49,104 +50,126 @@ namespace msa {
 
 		template <class State, class Action>
 		class UCT {
-			typedef NodeT <State, Action> Node;
+			typedef TreeNodeT<State, Action> TreeNode;
 		public:
-			float uct_k;			// k value in UCT function. default = sqrt(2)
-			unsigned int max_iterations;		// do a maximum of this many iterations (0 to run till end)
-			unsigned int max_millis;			// run for a maximum of this many milliseconds (0 to run till end)
-			unsigned int rollout_depth;
+			float uct_k;					// k value in UCT function. default = sqrt(2)
+			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
+			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
+			unsigned int simulation_steps;	// QUESTION: is this what's referred to as 'rollout depth'
 
-			UCT() {
-				uct_k = sqrt(2);
-				max_iterations = 100;
-				max_millis = 0;
-				rollout_depth = 10;
+
+			//-------------------------------------------------------------------------
+			UCT() :
+				uct_k( sqrt(2) ), 
+				max_iterations( 100 ),
+				max_millis( 0 ),
+				simulation_steps( 10 ) {
 			}
 
-/*
-			Node* select(Node* node) {
-		
-				//Node *c = node;
-				//float uct_score = c.wins / c.visits + sqrt(2 * log(self.visits)/c.visits)
 
-			}
-		*/
-			
-
-			// get best (immediate) child for given node based on uct score
-			Node * get_best_child_uct(Node* node, float uct_k) const {
-				int num_children = node->get_num_children();
-
-				if(num_children == 0) return NULL;
+			//-------------------------------------------------------------------------
+			// get best (immediate) child for given TreeNode based on uct score
+			TreeNode* get_best_uct_child(TreeNode* node, float uct_k) const {
+				// sanity check
+				if(!node->is_fully_expanded()) return NULL;
 
 				float best_utc_score = -std::numeric_limits<float>::max();
-				Node *best_node = NULL;
-				
+				TreeNode* best_node = NULL;
+
 				// iterate all immediate children and find best UTC score
+				int num_children = node->get_num_children();
 				for(int i=0; i< num_children; i++) {
 					/* 
 					QUESTIONS:
-						- some implementations divide child->value by child->num_visits, others don't. why?
-						- some implementations add FLT_EPSILON to the divisor, others don't. why?
-						- some implementations add 1 to this->num_visits inside log, others don't. why?
+					- some implementations divide child->value by child->num_visits, others don't. why?
+					- some implementations add FLT_EPSILON to the divisor, others don't. why?
+					- some implementations add 1 to this->num_visits inside log, others don't. why?
 					*/
-					Node *child = node->get_child(i).get();
+					TreeNode* child = node->get_child(i);
 					float uct_exploitation = (float)child->get_value() / (child->get_num_visits() + FLT_EPSILON);
 					float uct_exploration = sqrt( log((float)node->get_num_visits() + 1) / (child->get_num_visits() + FLT_EPSILON) );
 					float uct_score = uct_exploitation + uct_k * uct_exploration;
-					
+
 					if(uct_score > best_utc_score) {
 						best_utc_score = uct_score;
 						best_node = child;
 					}
 				}
-				
+
+				return best_node;
+			}
+
+
+			//-------------------------------------------------------------------------
+			TreeNode* get_most_visited_child(TreeNode* node) const {
+				int most_visits = 0;
+				TreeNode* best_node = NULL;
+
+				// iterate all immediate children and find best UTC score
+				int num_children = node->get_num_children();
+				for(int i=0; i< num_children; i++) {
+					TreeNode* child = node->get_child(i);
+					if(child->get_num_visits() > most_visits) {
+						most_visits = child->get_num_visits();
+						best_node = child;
+					}
+				}
+
 				return best_node;
 			}
 
 
 
-
+			//-------------------------------------------------------------------------
 			Action run(const State& current_state, unsigned int seed = 1) {
 				// initialize timer
 				LoopTimer timer;
 				timer.init();
 
 				// initialize random generator
-				std::mt19937 rand_gen(seed);
+				// std::mt19937 rand_gen(seed);
 
-				// initialize root node with current state
-				Node root_node(current_state);
+				// initialize root TreeNode with current state
+				TreeNode root_node(current_state);
+				TreeNode* best_node = NULL;
 
 				// iterate
-				int i=0;
+				int iteration = 0;
 				while(true) {
 					// indicate start of loop
 					timer.loop_start();
 
-					// search tree with mcts uct
-
-
-					// start at root
-					Node *node = &root_node;
-
-					// 1. select a leaf node
-					/* 
-					QUESTIONS:
-						- does this loop until a node 
-					*/
-					while(!node->get_state().is_terminal() && node->get_depth() < rollout_depth && node->is_expanded()) {
-						node = get_best_child_uct(node, uct_k);
+					// 1. SELECT. Start at root, dig down into tree using UCT on all fully expanded nodes
+					TreeNode* selected_node = &root_node;
+					while(!selected_node->is_terminal() && selected_node->is_fully_expanded()) {
+						selected_node = get_best_uct_child(selected_node, uct_k);
+//						assert(selected_node);	// sanity check
 					}
 
-					// 2. expand
+					// 2. EXPAND by adding a single child
+					// QUESTION: picking a child node (whuich hasn't yet been simulted) purely at random?
+					TreeNode* expanded_node = selected_node->expand();
 
-					// 3. rollout
-					//double delta = selected.rollOut(playerID);
+					// 3. SIMULATE
+					// QUESTION: is this what's referred to as a 'rollout'?
+					State simulated_state(expanded_node->get_state());
+					Action action;
+					for(int t = 0; t < simulation_steps; t++) {
+						if(simulated_state.is_terminal()) break;
+						simulated_state.get_random_action(action);
+						simulated_state.apply_action(action);
+					}
 
-					// 4. back propagation
-					//
+					float value = simulated_state.get_value();
 
+					// 4. BACK PROPAGATION
+					while(expanded_node) {
+						expanded_node->update(value);
+						expanded_node = expanded_node->get_parent();
+					}
+
+					// find most visited child
+					best_node = get_most_visited_child(&root_node);
 
 					// indicate end of loop for timer
 					timer.loop_end();
@@ -155,11 +178,11 @@ namespace msa {
 					if(max_millis > 0 && timer.check_duration(max_millis)) break;
 
 					// exit loop if current iterations exceeds max_iterations
-					if(max_iterations > 0 && i++ > max_iterations) break;
+					if(max_iterations > 0 && iteration++ > max_iterations) break;
 				}
 
+				if(best_node) return best_node->get_action();
 
-				// return most visited action
 				return Action();
 			}
 

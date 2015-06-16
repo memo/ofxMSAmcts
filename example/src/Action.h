@@ -4,6 +4,6 @@
 
 using namespace msa::mcts;
 
-class MyAction : public Action {
+class Action /*: public ActionBase */{
 
 };

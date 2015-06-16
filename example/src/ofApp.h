@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MyState.h"
-#include "MyAction.h"
+#include "State.h"
+#include "Action.h"
 
 #include "ofMain.h"
 #include "ofxCvHaarFinder.h"
@@ -9,9 +9,9 @@
 class ofApp : public ofBaseApp{
 public:
 
-	MyState current_state;
-	MyAction current_action;
-	UCT<MyState, MyAction> uct;
+	State current_state;
+	Action current_action;
+	UCT<State, Action> uct;
 
 
 	void setup();
