@@ -55,19 +55,20 @@ namespace msa {
 			float uct_k;					// k value in UCT function. default = sqrt(2)
 			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
 			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
-			unsigned int simulation_steps;	// QUESTION: is this what's referred to as 'rollout depth'
+			unsigned int simulation_depth;	// QUESTION: is this what's referred to as 'rollout depth'
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			UCT() :
 				uct_k( sqrt(2) ), 
 				max_iterations( 100 ),
 				max_millis( 0 ),
-				simulation_steps( 10 ) {
+				simulation_depth( 10 )
+			{
 			}
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			// get best (immediate) child for given TreeNode based on uct score
 			TreeNode* get_best_uct_child(TreeNode* node, float uct_k) const {
 				// sanity check
@@ -100,7 +101,7 @@ namespace msa {
 			}
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			TreeNode* get_most_visited_child(TreeNode* node) const {
 				int most_visits = 0;
 				TreeNode* best_node = NULL;
@@ -120,7 +121,7 @@ namespace msa {
 
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			Action run(const State& current_state, unsigned int seed = 1) {
 				// initialize timer
 				LoopTimer timer;
@@ -154,7 +155,7 @@ namespace msa {
 					// QUESTION: is this what's referred to as a 'rollout'?
 					State simulated_state(expanded_node->get_state());
 					Action action;
-					for(int t = 0; t < simulation_steps; t++) {
+					for(int t = 0; t < simulation_depth; t++) {
 						if(simulated_state.is_terminal()) break;
 						simulated_state.get_random_action(action);
 						simulated_state.apply_action(action);

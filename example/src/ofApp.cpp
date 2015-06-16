@@ -5,12 +5,21 @@
 using namespace msa::mcts;
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void ofApp::setup() {
+	ofSetBackgroundAuto(false);
+	ofBackground(0);
+	ofSetVerticalSync(true);
+//	ofSetCircleResolution(2);
+
+	uct.max_millis = 16;
+	uct.max_iterations = 0;
+	uct.simulation_depth = 10;
+
 	//msa::LoopTimer::test();
 
-	img.loadImage("test.jpg");
-	finder.setup("haarcascade_frontalface_default.xml");
-	finder.findHaarObjects(img);
+//	img.loadImage("test.jpg");
+//	finder.setup("haarcascade_frontalface_default.xml");
+//	finder.findHaarObjects(img);
 }
 
 //--------------------------------------------------------------
@@ -23,13 +32,21 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
-	img.draw(0, 0);
-	ofNoFill();
-	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
-		ofRectangle cur = finder.blobs[i].boundingRect;
-		ofRect(cur.x, cur.y, cur.width, cur.height);
-	}
+void ofApp::draw() {
+	ofSetColor(0, 1);
+	ofRect(0, 0, ofGetWidth(), ofGetHeight());
+
+	ofSetColor(255);
+	ofCircle(current_state.pos, 2);
+//	img.draw(0, 0);
+//	ofNoFill();
+//	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
+//		ofRectangle cur = finder.blobs[i].boundingRect;
+//		ofRect(cur.x, cur.y, cur.width, cur.height);
+//	}
+	
+	ofSetColor(255);
+	ofDrawBitmapString(ofToString(ofGetFrameRate(), 2) , 30, 30);
 }
 
 //--------------------------------------------------------------

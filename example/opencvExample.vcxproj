@@ -106,7 +106,6 @@
     <ClInclude Include="..\src\MSALoopTimer.h" />
     <ClInclude Include="..\src\TreeNodeT.h" />
     <ClInclude Include="..\src\ofxMSA_MCTS.h" />
-    <ClInclude Include="src\Action.h" />
     <ClInclude Include="src\State.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />

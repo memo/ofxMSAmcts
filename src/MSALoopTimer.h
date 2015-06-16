@@ -23,18 +23,21 @@ namespace msa {
 
 		LoopTimer():verbose(false) {}
 
+		//--------------------------------------------------------------
 		// initialize timer. Call before the loop starts
 		void init() {
 			start_time = Clock::now();
 			iterations = 0;
 		}
 
+		//--------------------------------------------------------------
 		// indicate start of loop
 		void loop_start() {
 			loop_start_time = Clock::now();
 			iterations++;
 		}
 
+		//--------------------------------------------------------------
 		// indicate end of loop
 		void loop_end() {
 			auto loop_end_time = Clock::now();
@@ -52,6 +55,7 @@ namespace msa {
 			}
 		}
 
+		//--------------------------------------------------------------
 		// check if current total run duration (since init) exceeds max_millis
 		bool check_duration(unsigned int max_millis) {
 			// estimate when the next loop will end
@@ -59,11 +63,13 @@ namespace msa {
 			return next_loop_end_time > start_time + std::chrono::milliseconds(max_millis);
 		}
 
+		//--------------------------------------------------------------
 		// return average loop duration
 		unsigned int avg_loop_duration_millis() {
 			return std::chrono::duration_cast<std::chrono::milliseconds>(avg_loop_duration).count();
 		}
 
+		//--------------------------------------------------------------
 		// return current total run duration (since init)
 		unsigned int run_duration_millis() {
 			return std::chrono::duration_cast<std::chrono::milliseconds>(run_duration).count();
@@ -71,8 +77,9 @@ namespace msa {
 
 
 
-		//-------------------------------------------------------------------
-		//-------------------------------------------------------------------
+		//--------------------------------------------------------------
+		//--------------------------------------------------------------
+		//--------------------------------------------------------------
 		// Example usage (and for testing)
 		static void test(unsigned int max_millis = 10000) {
 			LoopTimer timer;

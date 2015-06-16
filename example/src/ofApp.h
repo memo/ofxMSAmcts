@@ -1,7 +1,6 @@
 #pragma once
 
 #include "State.h"
-#include "Action.h"
 
 #include "ofMain.h"
 #include "ofxCvHaarFinder.h"

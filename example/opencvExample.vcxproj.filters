@@ -398,9 +398,6 @@
     <ClInclude Include="src\State.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Action.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TreeNodeT.h">
       <Filter>ofxMSA_MCTS</Filter>
     </ClInclude>

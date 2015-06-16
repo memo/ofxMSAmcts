@@ -20,21 +20,22 @@ namespace msa {
 
 			typedef std::shared_ptr< TreeNodeT<State, Action> > TreeNodePtr;
 			typedef std::shared_ptr< State > StatePtr;
-//			typedef std::shared_ptr< Action > ActionPtr;
+			//			typedef std::shared_ptr< Action > ActionPtr;
 
 		public:
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			TreeNodeT(const State& state, TreeNodeT* parent = NULL):
 				state(state),
 				action(),
 				parent(parent),
 				num_visits(0),
 				value(0),
-				depth(parent ? 0 : parent->depth + 1) {
+				depth(parent ? parent->depth + 1 : 0)
+			{
 			}
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			// expand by adding a single child
 			TreeNodeT* expand() {
 				// sanity check that we're not already fully expanded
@@ -57,15 +58,15 @@ namespace msa {
 				return add_child_with_action( actions[children.size()] );
 			}
 
-			
-			//-------------------------------------------------------------------------
+
+			//--------------------------------------------------------------
 			void update(float value) {
 				this->value += value;
 				num_visits++;
 			}
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			// getters
 			// state of the TreeNode
 			const State& get_state() const { return state; }
@@ -75,7 +76,7 @@ namespace msa {
 
 			// all children have been expanded and simulated
 			bool is_fully_expanded() const { return children.empty() == false && children.size() == actions.size(); }
-			
+
 			// does this TreeNode end the search (i.e. the game)
 			bool is_terminal() const { return state.is_terminal(); }
 
@@ -110,7 +111,7 @@ namespace msa {
 			std::vector< Action > actions;			// possible actions from this state
 
 
-			//-------------------------------------------------------------------------
+			//--------------------------------------------------------------
 			// create a clone of the current state, apply action, and add as child
 			TreeNodeT* add_child_with_action(const Action& new_action) {
 				// create a new TreeNode with the same state (will get cloned) as this TreeNode
@@ -132,21 +133,21 @@ namespace msa {
 
 		/*
 		template <class State, class Action>
-			TreeNodeT* add_child_with_action(const Action& new_action) {
-				// create a new TreeNode with the same state (will get cloned) as this TreeNode
-				TreeNode* child_node = new NodeT(state, this);
+		TreeNodeT* add_child_with_action(const Action& new_action) {
+		// create a new TreeNode with the same state (will get cloned) as this TreeNode
+		TreeNode* child_node = new NodeT(state, this);
 
-				// set the action of the child to be the new action
-				child_node->action = new_action;
+		// set the action of the child to be the new action
+		child_node->action = new_action;
 
-				// apply the new action to the state of the child TreeNode
-				child_node->state.apply_action(new_action);
+		// apply the new action to the state of the child TreeNode
+		child_node->state.apply_action(new_action);
 
-				// add to children
-				children.push_back(TreeNodePtr(child_node));
+		// add to children
+		children.push_back(TreeNodePtr(child_node));
 
-				return child_node;
-			}
-			*/
+		return child_node;
+		}
+		*/
 	}
 }
