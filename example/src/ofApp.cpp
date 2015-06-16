@@ -8,12 +8,12 @@ using namespace msa::mcts;
 void ofApp::setup() {
 	ofSetBackgroundAuto(false);
 	ofBackground(0);
-	ofSetVerticalSync(true);
+	ofSetVerticalSync(false);
 //	ofSetCircleResolution(2);
 
-	uct.max_millis = 16;
-	uct.max_iterations = 0;
-	uct.simulation_depth = 10;
+	uct.max_millis = 0;
+	uct.max_iterations = 100;
+	uct.simulation_depth = 2;
 
 	//msa::LoopTimer::test();
 
@@ -33,7 +33,10 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	ofSetColor(0, 1);
+	ofSetColor(0);
+	ofRect(0, 0, ofGetWidth(), 100);
+
+	ofSetColor(0, 5);
 	ofRect(0, 0, ofGetWidth(), ofGetHeight());
 
 	ofSetColor(255);
@@ -46,7 +49,14 @@ void ofApp::draw() {
 //	}
 	
 	ofSetColor(255);
-	ofDrawBitmapString(ofToString(ofGetFrameRate(), 2) , 30, 30);
+
+	stringstream str;
+	str << ofGetFrameRate() << " fps" << endl;
+	str << "total time : " << uct.timer.run_duration_millis() << " ms" << endl;
+	str << "avg time : " << uct.timer.avg_loop_duration_millis() << " ms" << endl;
+	str << "iterations : " << uct.iterations << endl;
+
+	ofDrawBitmapString(str.str(), 10, 10);
 }
 
 //--------------------------------------------------------------

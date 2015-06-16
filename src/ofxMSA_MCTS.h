@@ -56,7 +56,8 @@ namespace msa {
 			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
 			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
 			unsigned int simulation_depth;	// QUESTION: is this what's referred to as 'rollout depth'
-
+			LoopTimer timer;
+			int iterations;
 
 			//--------------------------------------------------------------
 			UCT() :
@@ -124,7 +125,6 @@ namespace msa {
 			//--------------------------------------------------------------
 			Action run(const State& current_state, unsigned int seed = 1) {
 				// initialize timer
-				LoopTimer timer;
 				timer.init();
 
 				// initialize random generator
@@ -135,7 +135,7 @@ namespace msa {
 				TreeNode* best_node = NULL;
 
 				// iterate
-				int iteration = 0;
+				iterations = 0;
 				while(true) {
 					// indicate start of loop
 					timer.loop_start();
@@ -179,7 +179,8 @@ namespace msa {
 					if(max_millis > 0 && timer.check_duration(max_millis)) break;
 
 					// exit loop if current iterations exceeds max_iterations
-					if(max_iterations > 0 && iteration++ > max_iterations) break;
+					if(max_iterations > 0 && iterations > max_iterations) break;
+					iterations++;
 				}
 
 				if(best_node) return best_node->get_action();

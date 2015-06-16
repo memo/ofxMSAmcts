@@ -1,6 +1,6 @@
 #pragma once
 
-#include "State.h"
+#include "CircleState.h"
 
 #include "ofMain.h"
 #include "ofxCvHaarFinder.h"
@@ -8,10 +8,9 @@
 class ofApp : public ofBaseApp{
 public:
 
-	State current_state;
-	Action current_action;
-	UCT<State, Action> uct;
-
+	circle::State current_state;
+	circle::Action current_action;
+	UCT<circle::State, circle::Action> uct;
 
 	void setup();
 	void update();
