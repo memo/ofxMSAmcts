@@ -9,49 +9,49 @@ void ofApp::setup() {
 	ofSetBackgroundAuto(false);
 	ofBackground(0);
 	ofSetVerticalSync(false);
-	ofSetCircleResolution(5);
+	ofSetCircleResolution(10);
 
 	uct.max_millis = 0;
 	uct.max_iterations = 100;
-	uct.simulation_depth = 10;
+	uct.simulation_depth = 5;
 
-	//msa::LoopTimer::test();
+	//msa::LoopTimer::test(10000);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::draw() {
-	// save old pos
-	ofVec2f old_pos = current_state.pos;
-
 	// run uct mcts on current state and get best action
 	current_action = uct.run(current_state);
 
 	// apply the action to the current state
 	current_state.apply_action(current_action);
+}
 
+//--------------------------------------------------------------
+void ofApp::draw() {
 	// black bg for text
 	ofSetColor(0);
-	ofRect(0, 0, 200, 70);
+	ofRect(0, 0, 220, 80);
 
 	// fade bg
 	ofSetColor(0, 5);
-	ofRect(0, 0, ofGetWidth(), ofGetHeight());
+	//ofRect(0, 0, ofGetWidth(), ofGetHeight());
 
-	// old pos
-	//ofSetColor(50);
-	//ofCircle(old_pos, 3);
+	ofSetColor(0, 5);
+	ofCircle(current_state.pos, 50);
 
 	// current pos
-	ofSetColor(255, 150, 0);
-	ofCircle(current_state.pos, 3);
+	ofColor c;
+	c.setHsb(int(ofGetElapsedTimef() * 10) % 255, 170, 255, 200);
+	//ofSetColor(255, 150, 0, 200);
+	ofSetColor(c);
+	ofCircle(current_state.pos, 7);
 
-/*	ofNoFill();
+	ofSetColor(255, 255);
+	ofCircle(current_state.pos, 5);
+
+	/*	ofNoFill();
 	ofSetColor(255);
 	ofCircle(current_state.pos, 4);
 	ofFill();
@@ -67,12 +67,12 @@ void ofApp::draw() {
 
 	stringstream str;
 	str << ofGetFrameRate() << " fps" << endl;
-	str << "total time : " << uct.timer.run_duration_millis() << " ms" << endl;
-	str << "avg time : " << uct.timer.avg_loop_duration_millis() << " ms" << endl;
+	str << "total time : " << uct.timer.run_duration_micros() << " us" << endl;
+	str << "avg time : " << uct.timer.avg_loop_duration_micros() << " us" << endl;
 	str << "iterations : " << uct.iterations << endl;
 	str << "do_discrete_random : " << (current_state.do_discrete_random ? "YES" : "NO" )<< endl;
 
-	ofDrawBitmapString(str.str(), 10, 10);
+	ofDrawBitmapString(str.str(), 10, 15);
 }
 
 //--------------------------------------------------------------
@@ -90,6 +90,22 @@ void ofApp::keyPressed(int key){
 	case 'd':
 		current_state.do_discrete_random ^= true;
 		break;
+	case 'v':
+		ofSetVerticalSync(false);
+		break;
+
+	case 'V':
+		ofSetVerticalSync(true);
+		break;
+
+	case 'a':
+		ofSetBackgroundAuto(false);
+		break;
+
+	case 'A':
+		ofSetBackgroundAuto(true);
+		break;
+
 
 	}
 }

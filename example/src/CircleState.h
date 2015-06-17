@@ -115,7 +115,7 @@ namespace circle {
 
 		void reset() {
 			pos.set(ofGetWidth()/2, ofGetHeight()/2);
-			vel.set(0, 2);
+			vel.set(0, 4);
 			frame_num = 0;
 			avg_pos.set(pos);
 		}
