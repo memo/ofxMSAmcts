@@ -11,15 +11,16 @@ namespace msa {
 
 	//template <class Clock>	// template doesn't work for some reason, reverting to typedef
 	class LoopTimer {
-		typedef std::chrono::steady_clock Clock;
+		typedef std::chrono::high_resolution_clock Clock;
+		typedef std::chrono::microseconds Units;
 	public:
 		bool verbose;
 
 		Clock::time_point start_time;
 		Clock::time_point loop_start_time;
 
-		std::chrono::milliseconds avg_loop_duration;
-		std::chrono::milliseconds run_duration;
+		Units avg_loop_duration;
+		Units run_duration;
 
 		LoopTimer():verbose(false) {}
 
@@ -41,10 +42,10 @@ namespace msa {
 		// indicate end of loop
 		void loop_end() {
 			auto loop_end_time = Clock::now();
-			auto current_loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end_time - loop_start_time);
+			auto current_loop_duration = std::chrono::duration_cast<Units>(loop_end_time - loop_start_time);
 
-			run_duration = std::chrono::duration_cast<std::chrono::milliseconds>(loop_end_time - start_time);
-			avg_loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(run_duration/iterations);
+			run_duration = std::chrono::duration_cast<Units>(loop_end_time - start_time);
+			avg_loop_duration = std::chrono::duration_cast<Units>(run_duration/iterations);
 
 			if(verbose) {
 				std::cout << iterations << ": ";
@@ -65,14 +66,14 @@ namespace msa {
 
 		//--------------------------------------------------------------
 		// return average loop duration
-		unsigned int avg_loop_duration_millis() {
-			return std::chrono::duration_cast<std::chrono::milliseconds>(avg_loop_duration).count();
+		unsigned int avg_loop_duration_micros() {
+			return std::chrono::duration_cast<Units>(avg_loop_duration).count();
 		}
 
 		//--------------------------------------------------------------
 		// return current total run duration (since init)
-		unsigned int run_duration_millis() {
-			return std::chrono::duration_cast<std::chrono::milliseconds>(run_duration).count();
+		unsigned int run_duration_micros() {
+			return std::chrono::duration_cast<Units>(run_duration).count();
 		}
 
 
@@ -81,7 +82,7 @@ namespace msa {
 		//--------------------------------------------------------------
 		//--------------------------------------------------------------
 		// Example usage (and for testing)
-		static void test(unsigned int max_millis = 10000) {
+		static void test(unsigned int max_millis) {
 			LoopTimer timer;
 			timer.verbose = true;
 
@@ -102,8 +103,8 @@ namespace msa {
 				// exit loop if current total run duration (since init) exceeds max_millis
 				if(timer.check_duration(max_millis)) break;
 			}
-			std::cout << "total run time: " << timer.run_duration_millis() << ", ";
-			std::cout << "avg_loop_duration: " << timer.avg_loop_duration_millis() << ", ";
+			std::cout << "total run time: " << timer.run_duration_micros() << ", ";
+			std::cout << "avg_loop_duration: " << timer.avg_loop_duration_micros() << ", ";
 			std::cout << std::endl;
 		}
 
