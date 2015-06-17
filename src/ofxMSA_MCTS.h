@@ -161,7 +161,7 @@ namespace msa {
 						simulated_state.apply_action(action);
 					}
 
-					float value = simulated_state.get_value();
+					float value = simulated_state.evaluate();
 
 					// 4. BACK PROPAGATION
 					while(expanded_node) {
