@@ -67,20 +67,16 @@ namespace circle {
 		void get_actions(std::vector<Action>& actions) const  {
 			actions.resize(kNumActions);
 			for(int i=0; i<kNumActions; i++) {
-				actions[i].turn = ofMap(i, 0, kNumActions-1, kTurnRangeMin, kTurnRangeMax);
+				if(do_discrete_random) actions[i].turn = ofMap(i, 0, kNumActions-1, kTurnRangeMin, kTurnRangeMax);
+				else get_random_action(actions[i]);
 			}
 		}
 
-		/*
-		// return number of actions
-		int get_num_actions() const  {
-		return kNumActions;
-		}
-		*/
 
 		// get a random action
 		void get_random_action(Action& action) const {
-			action.turn = ofMap(ofRandom(kNumActions), 0, kNumActions-1, kTurnRangeMin, kTurnRangeMax);
+			if(do_discrete_random) action.turn = ofMap(floor(ofRandom(kNumActions)), 0, kNumActions-1, kTurnRangeMin, kTurnRangeMax);
+			else action.turn = ofRandom(kTurnRangeMin, kTurnRangeMax);
 		}
 
 
@@ -115,11 +111,14 @@ namespace circle {
 		int frame_num;		// current tick
 		ofVec2f avg_pos;	// average position
 
+		bool do_discrete_random;
+
 		void reset() {
 			pos.set(ofGetWidth()/2, ofGetHeight()/2);
 			vel.set(0, 2);
 			frame_num = 0;
 			avg_pos.set(pos);
+			do_discrete_random = true;
 		}
 	};
 
