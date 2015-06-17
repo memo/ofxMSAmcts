@@ -21,23 +21,41 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+	// save old pos
+	ofVec2f old_pos = current_state.pos;
+
 	// run uct mcts on current state and get best action
 	current_action = uct.run(current_state);
 
 	// apply the action to the current state
 	current_state.apply_action(current_action);
-}
 
-//--------------------------------------------------------------
-void ofApp::draw() {
+	// black bg for text
 	ofSetColor(0);
 	ofRect(0, 0, 200, 70);
 
+	// fade bg
 	ofSetColor(0, 5);
 	ofRect(0, 0, ofGetWidth(), ofGetHeight());
 
+	// old pos
+	//ofSetColor(50);
+	//ofCircle(old_pos, 3);
+
+	// current pos
+	ofSetColor(255, 150, 0);
+	ofCircle(current_state.pos, 3);
+
+/*	ofNoFill();
 	ofSetColor(255);
-	ofCircle(current_state.pos, 2);
+	ofCircle(current_state.pos, 4);
+	ofFill();
+	*/
 	//	img.draw(0, 0);
 	//	ofNoFill();
 	//	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
@@ -52,6 +70,7 @@ void ofApp::draw() {
 	str << "total time : " << uct.timer.run_duration_millis() << " ms" << endl;
 	str << "avg time : " << uct.timer.avg_loop_duration_millis() << " ms" << endl;
 	str << "iterations : " << uct.iterations << endl;
+	str << "do_discrete_random : " << (current_state.do_discrete_random ? "YES" : "NO" )<< endl;
 
 	ofDrawBitmapString(str.str(), 10, 10);
 }
@@ -67,6 +86,9 @@ void ofApp::keyPressed(int key){
 		break;
 	case 'r':
 		current_state.reset();
+		break;
+	case 'd':
+		current_state.do_discrete_random ^= true;
 		break;
 
 	}
