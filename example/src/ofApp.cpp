@@ -9,17 +9,14 @@ void ofApp::setup() {
 	ofSetBackgroundAuto(false);
 	ofBackground(0);
 	ofSetVerticalSync(false);
-//	ofSetCircleResolution(2);
+	ofSetCircleResolution(5);
 
 	uct.max_millis = 0;
 	uct.max_iterations = 100;
-	uct.simulation_depth = 2;
+	uct.simulation_depth = 10;
 
 	//msa::LoopTimer::test();
 
-//	img.loadImage("test.jpg");
-//	finder.setup("haarcascade_frontalface_default.xml");
-//	finder.findHaarObjects(img);
 }
 
 //--------------------------------------------------------------
@@ -34,20 +31,20 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofSetColor(0);
-	ofRect(0, 0, ofGetWidth(), 100);
+	ofRect(0, 0, 200, 70);
 
 	ofSetColor(0, 5);
 	ofRect(0, 0, ofGetWidth(), ofGetHeight());
 
 	ofSetColor(255);
 	ofCircle(current_state.pos, 2);
-//	img.draw(0, 0);
-//	ofNoFill();
-//	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
-//		ofRectangle cur = finder.blobs[i].boundingRect;
-//		ofRect(cur.x, cur.y, cur.width, cur.height);
-//	}
-	
+	//	img.draw(0, 0);
+	//	ofNoFill();
+	//	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
+	//		ofRectangle cur = finder.blobs[i].boundingRect;
+	//		ofRect(cur.x, cur.y, cur.width, cur.height);
+	//	}
+
 	ofSetColor(255);
 
 	stringstream str;
@@ -61,7 +58,18 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	switch(key) {
+	case 'f':
+		ofToggleFullscreen();
+		break;
+	case 'c':
+		ofBackground(0);
+		break;
+	case 'r':
+		current_state.reset();
+		break;
 
+	}
 }
 
 //--------------------------------------------------------------

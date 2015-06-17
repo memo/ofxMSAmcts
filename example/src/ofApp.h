@@ -1,16 +1,19 @@
 #pragma once
 
 #include "CircleState.h"
+#include "FaceState.h"
 
 #include "ofMain.h"
-#include "ofxCvHaarFinder.h"
+
+
+using namespace circle;
+//using namespace face;
 
 class ofApp : public ofBaseApp{
 public:
-
-	circle::State current_state;
-	circle::Action current_action;
-	UCT<circle::State, circle::Action> uct;
+	State current_state;
+	Action current_action;
+	UCT<State, Action> uct;
 
 	void setup();
 	void update();
@@ -25,7 +28,4 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);		
-
-	ofImage img;
-	ofxCvHaarFinder finder;
 };
