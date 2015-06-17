@@ -30,6 +30,7 @@ namespace circle {
 		//--------------------------------------------------------------
 		// MUST HAVE METHODS
 		State() {
+			do_discrete_random = true;
 			reset();
 		}
 		/*
@@ -84,15 +85,14 @@ namespace circle {
 		float get_value() const  {
 			// try to be a circle with diameter desired_distance
 			float desired_distance = min(min(ofGetMouseX(), ofGetMouseY()), min(ofGetWidth() - ofGetMouseX(), ofGetHeight() - ofGetMouseY()));
+			if(desired_distance < 1) desired_distance = 1;
 			ofVec2f center(ofGetMouseX(), ofGetMouseY());
-			//float desired_distance = ofGetHeight()/3;
-			//ofVec2f center(ofGetWidth()/2, ofGetHeight()/2);
 
 			// score based on distance to center being close to desired_distance
-			float distance_score = ofClamp(1.0f - fabs(pos.distance(center) / desired_distance - 1.0f), 0, 1);
+			float distance_score = 1.0f - fabs(pos.distance(center) / desired_distance - 1.0f);
 
 			// score based on avg_pos being in center
-			float avg_pos_score = ofClamp(1.0f - avg_pos.distance(center) / desired_distance, 0, 1);
+			float avg_pos_score = 1.0f - avg_pos.distance(center) / desired_distance;
 
 			return distance_score + avg_pos_score * 0.5;
 		}
@@ -118,7 +118,6 @@ namespace circle {
 			vel.set(0, 2);
 			frame_num = 0;
 			avg_pos.set(pos);
-			do_discrete_random = true;
 		}
 	};
 
