@@ -100,7 +100,9 @@ namespace circle {
 
 		// return state as string (for debug purposes)
 		std::string to_string() const  {
-			return "";
+			stringstream str;
+			str << "do_discrete_random : " << (do_discrete_random ? "YES" : "NO" )<< endl;
+			return str.str();
 		}
 
 
@@ -119,6 +121,26 @@ namespace circle {
 			frame_num = 0;
 			avg_pos.set(pos);
 		}
+
+		void draw() {
+			// fade bg
+			ofSetColor(0, 5);
+			//ofRect(0, 0, ofGetWidth(), ofGetHeight());
+
+			ofSetColor(0, 5);
+			ofCircle(pos, 50);
+
+			// current pos
+			ofColor c;
+			c.setHsb(int(ofGetElapsedTimef() * 10) % 255, 170, 255, 200);
+			//ofSetColor(255, 150, 0, 200);
+			ofSetColor(c);
+			ofCircle(pos, 7);
+
+			ofSetColor(255, 255);
+			ofCircle(pos, 5);
+		}
+		
 	};
 
 }

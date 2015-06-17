@@ -30,48 +30,21 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	current_state.draw();
+
 	// black bg for text
 	ofSetColor(0);
 	ofRect(0, 0, 220, 80);
 
-	// fade bg
-	ofSetColor(0, 5);
-	//ofRect(0, 0, ofGetWidth(), ofGetHeight());
-
-	ofSetColor(0, 5);
-	ofCircle(current_state.pos, 50);
-
-	// current pos
-	ofColor c;
-	c.setHsb(int(ofGetElapsedTimef() * 10) % 255, 170, 255, 200);
-	//ofSetColor(255, 150, 0, 200);
-	ofSetColor(c);
-	ofCircle(current_state.pos, 7);
-
-	ofSetColor(255, 255);
-	ofCircle(current_state.pos, 5);
-
-	/*	ofNoFill();
-	ofSetColor(255);
-	ofCircle(current_state.pos, 4);
-	ofFill();
-	*/
-	//	img.draw(0, 0);
-	//	ofNoFill();
-	//	for(unsigned int i = 0; i < finder.blobs.size(); i++) {
-	//		ofRectangle cur = finder.blobs[i].boundingRect;
-	//		ofRect(cur.x, cur.y, cur.width, cur.height);
-	//	}
-
-	ofSetColor(255);
-
+	// stats
 	stringstream str;
 	str << ofGetFrameRate() << " fps" << endl;
 	str << "total time : " << uct.timer.run_duration_micros() << " us" << endl;
 	str << "avg time : " << uct.timer.avg_loop_duration_micros() << " us" << endl;
 	str << "iterations : " << uct.iterations << endl;
-	str << "do_discrete_random : " << (current_state.do_discrete_random ? "YES" : "NO" )<< endl;
+	str << current_state.to_string();
 
+	ofSetColor(255);
 	ofDrawBitmapString(str.str(), 10, 15);
 }
 
@@ -97,6 +70,7 @@ void ofApp::keyPressed(int key){
 		break;
 	case 'c':
 		ofBackground(0);
+
 		break;
 	case 'r':
 		current_state.reset();
