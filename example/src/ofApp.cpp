@@ -78,6 +78,20 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch(key) {
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	case '0':
+		uct.max_iterations = 100 + (key-'0') * 1000;
+		break;
+
+
 	case 'f':
 		ofToggleFullscreen();
 		break;
