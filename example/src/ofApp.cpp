@@ -76,7 +76,7 @@ void ofApp::keyPressed(int key){
 		current_state.reset();
 		break;
 	case 'd':
-		current_state.do_discrete_random ^= true;
+		current_state.data.do_discrete_random ^= true;
 		break;
 	case 'v':
 		ofSetVerticalSync(false);
