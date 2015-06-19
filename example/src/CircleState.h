@@ -81,7 +81,7 @@ namespace circle {
 		}
 
 
-		// evaluate this state and return a 'value' or 'score'
+		// evaluate this state and return a 'value' based on rewards and penalties
 		float evaluate() const  {
 			// try to be a circle with diameter desired_distance
 			float desired_distance = min(min(ofGetMouseX(), ofGetMouseY()), min(ofGetWidth() - ofGetMouseX(), ofGetHeight() - ofGetMouseY()));
