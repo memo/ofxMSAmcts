@@ -59,6 +59,8 @@ namespace msa {
 			LoopTimer timer;
 			int iterations;
 
+			// QUESTION: Macro actions. run MCTS in a separate thread to have L*times longer
+
 			//--------------------------------------------------------------
 			UCT() :
 				uct_k( sqrt(2) ), 
