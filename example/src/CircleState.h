@@ -32,7 +32,7 @@ namespace circle {
 			data.do_discrete_random = true;
 			reset();
 		}
-/*
+
 		// perform a deep clone of the given state
 		State(const State& other)  {
 			clone_from(other);
@@ -46,10 +46,9 @@ namespace circle {
 
 		// perform a deep clone of the given state
 		void clone_from(const State& other)  {
-			//data = other.data;
 			memcpy(&data, &other.data, sizeof(data));
 		}
-		*/
+		
 		// whether or not this state is terminal (reached end)
 		bool is_terminal() const  {
 			return false;
