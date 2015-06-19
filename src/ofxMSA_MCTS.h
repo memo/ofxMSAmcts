@@ -48,7 +48,7 @@ Some points in no particular order
 namespace msa {
 	namespace mcts {
 
-		template <class State, class Action>
+		template <class State, typename Action>
 		class UCT {
 			typedef TreeNodeT<State, Action> TreeNode;
 		public:

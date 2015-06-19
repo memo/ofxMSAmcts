@@ -15,7 +15,7 @@ Only contains information / methods related to State, Action, Parent, Children e
 namespace msa {
 	namespace mcts {
 
-		template <class State, class Action>
+		template <class State, typename Action>
 		class TreeNodeT {
 
 			typedef std::shared_ptr< TreeNodeT<State, Action> > TreeNodePtr;
