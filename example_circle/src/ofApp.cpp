@@ -42,6 +42,7 @@ void ofApp::draw() {
 	str << "total time : " << uct.timer.run_duration_micros() << " us" << endl;
 	str << "avg time : " << uct.timer.avg_loop_duration_micros() << " us" << endl;
 	str << "iterations : " << uct.iterations << endl;
+	str << "--------------------------------------------" << endl;
 	str << current_state.to_string();
 
 	ofSetColor(255);
@@ -76,7 +77,7 @@ void ofApp::keyPressed(int key){
 		current_state.reset();
 		break;
 	case 'd':
-		current_state.data.do_discrete_random ^= true;
+//		current_state.data.do_discrete_random ^= true;
 		break;
 	case 'v':
 		ofSetVerticalSync(false);

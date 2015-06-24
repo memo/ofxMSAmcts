@@ -1,13 +1,9 @@
 #pragma once
 
 #include "CircleState.h"
-#include "FaceState.h"
-
 #include "ofMain.h"
 
 
-using namespace circle;
-//using namespace face;
 
 class ofApp : public ofBaseApp{
 public:
