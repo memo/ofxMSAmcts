@@ -36,7 +36,7 @@ Some points in no particular order
 
 #pragma once
 
-#include <random>
+//#include <random>
 
 //#include "StateT.h"
 #include "TreeNodeT.h"
@@ -55,11 +55,11 @@ namespace msa {
 			float uct_k;					// k value in UCT function. default = sqrt(2)
 			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
 			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
-			unsigned int simulation_depth;	// QUESTION: is this what's referred to as 'rollout depth'
+			unsigned int simulation_depth;	// how many ticks (frames) to run simulation for
 			LoopTimer timer;
 			int iterations;
 
-			// QUESTION: Macro actions. run MCTS in a separate thread to have L*times longer
+			// QUESTION: Macro actions. run MCTS in a separate thread to have L*times longer?
 
 			//--------------------------------------------------------------
 			UCT() :
@@ -67,8 +67,7 @@ namespace msa {
 				max_iterations( 100 ),
 				max_millis( 0 ),
 				simulation_depth( 10 )
-			{
-			}
+			{}
 
 
 			//--------------------------------------------------------------
@@ -129,11 +128,9 @@ namespace msa {
 				// initialize timer
 				timer.init();
 
-				// initialize random generator
-				// std::mt19937 rand_gen(seed);
-
 				// initialize root TreeNode with current state
 				TreeNode root_node(current_state);
+
 				TreeNode* best_node = NULL;
 
 				// iterate
@@ -150,11 +147,9 @@ namespace msa {
 					}
 
 					// 2. EXPAND by adding a single child
-					// QUESTION: picking a child node (whuich hasn't yet been simulted) purely at random?
 					TreeNode* expanded_node = selected_node->expand();
 
 					// 3. SIMULATE
-					// QUESTION: is this what's referred to as a 'rollout'?
 					State simulated_state(expanded_node->get_state());
 					Action action;
 					for(int t = 0; t < simulation_depth; t++) {
@@ -185,8 +180,10 @@ namespace msa {
 					iterations++;
 				}
 
+				// return best node's action
 				if(best_node) return best_node->get_action();
 
+				// we shouldn't be here
 				return Action();
 			}
 

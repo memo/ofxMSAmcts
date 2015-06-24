@@ -2,8 +2,6 @@
 
 
 
-using namespace msa::mcts;
-
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofSetBackgroundAuto(false);
@@ -16,7 +14,6 @@ void ofApp::setup() {
 	uct.simulation_depth = 5;
 
 	//msa::LoopTimer::test(10000);
-
 }
 
 //--------------------------------------------------------------
@@ -69,16 +66,19 @@ void ofApp::keyPressed(int key){
 	case 'f':
 		ofToggleFullscreen();
 		break;
+
 	case 'c':
 		ofBackground(0);
-
 		break;
+
 	case 'r':
 		current_state.reset();
 		break;
+
 	case 'd':
-//		current_state.data.do_discrete_random ^= true;
+		current_state.data.do_discrete_random ^= true;
 		break;
+
 	case 'v':
 		ofSetVerticalSync(false);
 		break;
@@ -94,8 +94,6 @@ void ofApp::keyPressed(int key){
 	case 'A':
 		ofSetBackgroundAuto(true);
 		break;
-
-
 	}
 }
 

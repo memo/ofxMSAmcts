@@ -19,8 +19,8 @@ namespace msa {
 		class TreeNodeT {
 
 			typedef std::shared_ptr< TreeNodeT<State, Action> > TreeNodePtr;
-			typedef std::shared_ptr< State > StatePtr;
-			//			typedef std::shared_ptr< Action > ActionPtr;
+			//typedef std::shared_ptr< State > StatePtr;
+			//typedef std::shared_ptr< Action > ActionPtr;
 
 		public:
 			//--------------------------------------------------------------
@@ -50,7 +50,7 @@ namespace msa {
 					state.get_actions(actions);
 
 					// randomize the order
-					// QUESTION: should I use a RandomGenerator?
+					// QUESTION: should I use a RandomGenerator with particular distribution?
 					std::random_shuffle(actions.begin(), actions.end());
 				}
 
@@ -67,7 +67,7 @@ namespace msa {
 
 
 			//--------------------------------------------------------------
-			// getters
+			// GETTERS
 			// state of the TreeNode
 			const State& get_state() const { return state; }
 
@@ -131,23 +131,5 @@ namespace msa {
 
 		};
 
-		/*
-		template <class State, class Action>
-		TreeNodeT* add_child_with_action(const Action& new_action) {
-		// create a new TreeNode with the same state (will get cloned) as this TreeNode
-		TreeNode* child_node = new NodeT(state, this);
-
-		// set the action of the child to be the new action
-		child_node->action = new_action;
-
-		// apply the new action to the state of the child TreeNode
-		child_node->state.apply_action(new_action);
-
-		// add to children
-		children.push_back(TreeNodePtr(child_node));
-
-		return child_node;
-		}
-		*/
 	}
 }
