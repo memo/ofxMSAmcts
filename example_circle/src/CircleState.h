@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../src/ofxMSA_MCTS.h"
+#include "../../src/ofxMSAmcts.h"
 
 #include "ofMain.h"
 

@@ -102,7 +102,7 @@
     <Filter Include="addons\ofxOpenCv\libs\opencv\include\opencv2\video">
       <UniqueIdentifier>{61E04F54-C77F-B674-C2AB-FEC2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ofxMSA_MCTS">
+    <Filter Include="ofxMSAmcts">
       <UniqueIdentifier>{135f76d3-2b77-4535-941c-ba27461bb0e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -389,23 +389,17 @@
     <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\video.hpp">
       <Filter>addons\ofxOpenCv\libs\opencv\include\opencv2\video</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Action.h">
-      <Filter>ofxMSA_MCTS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Node.h">
-      <Filter>ofxMSA_MCTS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\State.h">
-      <Filter>ofxMSA_MCTS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ofxMSA_MCTS.h">
-      <Filter>ofxMSA_MCTS</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MSALoopTimer.h">
-      <Filter>ofxMSA_MCTS</Filter>
+      <Filter>ofxMSAmcts</Filter>
     </ClInclude>
     <ClInclude Include="src\CircleState.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxMSAmcts.h">
+      <Filter>ofxMSAmcts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TreeNodeT.h">
+      <Filter>ofxMSAmcts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
