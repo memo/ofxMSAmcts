@@ -1,39 +1,3 @@
-/*
-
-MCTS Code Based on the Java (Simon Lucas - University of Essex) and Python (Peter Cowling, Ed Powley, Daniel Whitehouse - University of York) impelementations by at http://mcts.ai/code/index.html
-
-Usage:
-'State' contains the current state
-'Action' contains an action that can be applied to a state to bring it to a new state
-
-1. Extend class 'msa::mcts::State' to contain the state of your system
-
-2. Extend class 'msa::mcts::Action' to contain actions that can apply to your system state
-
-3. init:
-StatePtr current_state = StatePtr(new State());
-Action current_action;
-
-4. update loop:
-// create a Node from current state
-Node current_node( current_state, current_action );
-
-// get the best action
-current_action = current_node->get_best_action();
-
-// apply the action to the current state
-current_state->apply_action(current_action);
-
-
-Some points in no particular order
-- it's not tailored for any specific use case. i.e. quite generic (but perhaps not generic enough)
-- it's not optimized (priority on readability and flexibility)
-- it supports variable number of actions per step
-
-
-
-*/
-
 #pragma once
 
 //#include <random>
@@ -51,13 +15,17 @@ namespace msa {
 		template <class State, typename Action>
 		class UCT {
 			typedef TreeNodeT<State, Action> TreeNode;
+
+		private:
+			LoopTimer timer;
+			int iterations;
+
 		public:
 			float uct_k;					// k value in UCT function. default = sqrt(2)
 			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
 			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
 			unsigned int simulation_depth;	// how many ticks (frames) to run simulation for
-			LoopTimer timer;
-			int iterations;
+
 
 			// QUESTION: Macro actions. run MCTS in a separate thread to have L*times longer?
 
@@ -69,6 +37,15 @@ namespace msa {
 				simulation_depth( 10 )
 			{}
 
+
+			//--------------------------------------------------------------
+			const LoopTimer & get_timer() const {
+				return timer;
+			}
+
+			const int get_iterations() const {
+				return iterations;
+			}
 
 			//--------------------------------------------------------------
 			// get best (immediate) child for given TreeNode based on uct score
@@ -140,30 +117,36 @@ namespace msa {
 					timer.loop_start();
 
 					// 1. SELECT. Start at root, dig down into tree using UCT on all fully expanded nodes
-					TreeNode* selected_node = &root_node;
-					while(!selected_node->is_terminal() && selected_node->is_fully_expanded()) {
-						selected_node = get_best_uct_child(selected_node, uct_k);
-//						assert(selected_node);	// sanity check
+					TreeNode* node = &root_node;
+					while(!node->is_terminal() && node->is_fully_expanded()) {
+						node = get_best_uct_child(node, uct_k);
+//						assert(node);	// sanity check
 					}
 
-					// 2. EXPAND by adding a single child
-					TreeNode* expanded_node = selected_node->expand();
+					// 2. EXPAND by adding a single child (if not terminal or not fully expanded)
+					if(!node->is_fully_expanded() && !node->is_terminal()) node = node->expand();
+					
+					State state(node->get_state());
 
-					// 3. SIMULATE
-					State simulated_state(expanded_node->get_state());
-					Action action;
-					for(int t = 0; t < simulation_depth; t++) {
-						if(simulated_state.is_terminal()) break;
-						simulated_state.get_random_action(action);
-						simulated_state.apply_action(action);
+					// 3. SIMULATE (if not terminal)
+					if(!node->is_terminal()) {
+						Action action;
+						for(int t = 0; t < simulation_depth; t++) {
+							if(state.is_terminal()) break;
+
+							if(state.get_random_action(action))
+								state.apply_action(action);
+							else
+								break;
+						}
 					}
 
-					float value = simulated_state.evaluate();
+					float value = state.evaluate();
 
 					// 4. BACK PROPAGATION
-					while(expanded_node) {
-						expanded_node->update(value);
-						expanded_node = expanded_node->get_parent();
+					while(node) {
+						node->update(value);
+						node = node->get_parent();
 					}
 
 					// find most visited child

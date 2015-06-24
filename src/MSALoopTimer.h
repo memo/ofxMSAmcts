@@ -58,7 +58,7 @@ namespace msa {
 
 		//--------------------------------------------------------------
 		// check if current total run duration (since init) exceeds max_millis
-		bool check_duration(unsigned int max_millis) {
+		bool check_duration(unsigned int max_millis) const {
 			// estimate when the next loop will end
 			auto next_loop_end_time = Clock::now() + avg_loop_duration;
 			return next_loop_end_time > start_time + std::chrono::milliseconds(max_millis);
@@ -66,13 +66,13 @@ namespace msa {
 
 		//--------------------------------------------------------------
 		// return average loop duration
-		unsigned int avg_loop_duration_micros() {
+		unsigned int avg_loop_duration_micros() const {
 			return std::chrono::duration_cast<Units>(avg_loop_duration).count();
 		}
 
 		//--------------------------------------------------------------
 		// return current total run duration (since init)
-		unsigned int run_duration_micros() {
+		unsigned int run_duration_micros() const {
 			return std::chrono::duration_cast<Units>(run_duration).count();
 		}
 
