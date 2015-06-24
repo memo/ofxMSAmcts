@@ -1,3 +1,9 @@
+/*
+A very simple C++11 Templated MCTS (Monte Carlo Tree Search) implementation with examples for openFrameworks. 
+
+MCTS Code Based on the Java (Simon Lucas - University of Essex) and Python (Peter Cowling, Ed Powley, Daniel Whitehouse - University of York) impelementations at http://mcts.ai/code/index.html
+*/
+
 #pragma once
 
 //#include <random>
@@ -25,9 +31,6 @@ namespace msa {
 			unsigned int max_iterations;	// do a maximum of this many iterations (0 to run till end)
 			unsigned int max_millis;		// run for a maximum of this many milliseconds (0 to run till end)
 			unsigned int simulation_depth;	// how many ticks (frames) to run simulation for
-
-
-			// QUESTION: Macro actions. run MCTS in a separate thread to have L*times longer?
 
 			//--------------------------------------------------------------
 			UCT() :
@@ -58,13 +61,7 @@ namespace msa {
 
 				// iterate all immediate children and find best UTC score
 				int num_children = node->get_num_children();
-				for(int i=0; i< num_children; i++) {
-					/* 
-					QUESTIONS:
-					- some implementations divide child->value by child->num_visits, others don't. why?
-					- some implementations add FLT_EPSILON to the divisor, others don't. why?
-					- some implementations add 1 to this->num_visits inside log, others don't. why?
-					*/
+				for(int i = 0; i < num_children; i++) {
 					TreeNode* child = node->get_child(i);
 					float uct_exploitation = (float)child->get_value() / (child->get_num_visits() + FLT_EPSILON);
 					float uct_exploration = sqrt( log((float)node->get_num_visits() + 1) / (child->get_num_visits() + FLT_EPSILON) );
@@ -82,12 +79,12 @@ namespace msa {
 
 			//--------------------------------------------------------------
 			TreeNode* get_most_visited_child(TreeNode* node) const {
-				int most_visits = 0;
+				int most_visits = -1;
 				TreeNode* best_node = NULL;
 
-				// iterate all immediate children and find best UTC score
+				// iterate all immediate children and find most visited
 				int num_children = node->get_num_children();
-				for(int i=0; i< num_children; i++) {
+				for(int i = 0; i < num_children; i++) {
 					TreeNode* child = node->get_child(i);
 					if(child->get_num_visits() > most_visits) {
 						most_visits = child->get_num_visits();

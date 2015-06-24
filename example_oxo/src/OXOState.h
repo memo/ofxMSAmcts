@@ -21,7 +21,7 @@ namespace oxo {
 	//--------------------------------------------------------------
 	//--------------------------------------------------------------
 	class State /*: public StateT<Action> */{
-		typedef std::shared_ptr< Action > ActionPtr;
+		//typedef std::shared_ptr< Action > ActionPtr;
 	public:
 
 		//--------------------------------------------------------------
@@ -44,8 +44,7 @@ namespace oxo {
 
 		// perform a deep clone of the given state
 		void clone_from(const State& other)  {
-			//memcpy(&data, &other.data, sizeof(data));
-			data = other.data;
+			memcpy(&data, &other.data, sizeof(data));
 		}
 
 		// whether or not this state is terminal (reached end)
@@ -64,23 +63,23 @@ namespace oxo {
 			// swap player turn
 			data.player_turn = 3 - data.player_turn;
 
-			// evaluates the state of the board
-			static int winning_combos[8][3] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+			// update game state
+			static int win_combo[8][3] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
 
 			for(int i=0; i<8; i++) {
-				// if winning combo found, return win
-				if(data.board[ winning_combos[i][0] ] > 0 && data.board[ winning_combos[i][0] ] == data.board[ winning_combos[i][1] ] && data.board[ winning_combos[i][1] ] == data.board[ winning_combos[i][2] ]) {
-					data.winner = data.board[ winning_combos[i][0] ];
+				// if winning combo found,
+				if(data.board[ win_combo[i][0] ] > 0 && data.board[ win_combo[i][0] ] == data.board[ win_combo[i][1] ] && data.board[ win_combo[i][1] ] == data.board[ win_combo[i][2] ]) {
+					data.winner = data.board[ win_combo[i][0] ];
 					data.is_terminal = true;
 					return;
 				}
 			}
 
 			// if no winning combo found
-			// find number of empty tiles (this could be combined with loop above, keeping it separate for readability)
-			std::vector<Action> actions;
-			get_actions(actions);
-			if(actions.empty()) {
+			// find number of empty tiles
+			int num_empty = 0;
+			for(int i=0; i<9; i++) if(data.board[i] == 0) num_empty++;
+			if(num_empty == 0) {
 				data.winner = 0;
 				data.is_terminal = true;
 			}
@@ -100,7 +99,7 @@ namespace oxo {
 		bool get_random_action(Action& action) const {
 			std::vector<Action> actions;
 			get_actions(actions);
-			if(actions.empty()) return false;
+			//if(actions.empty()) return false;
 
 			action = actions[floor(ofRandom(actions.size()))];
 			return true;
@@ -110,7 +109,7 @@ namespace oxo {
 		// evaluate this state and return a 'value' based on rewards and penalties
 		float evaluate() const  {
 			// game still going
-			if(!data.is_terminal) return 0.25;
+			if(!data.is_terminal) return 0;
 
 			// draw
 			if(data.winner == 0) return 0.5;
