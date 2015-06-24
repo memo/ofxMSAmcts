@@ -9,6 +9,8 @@ void ofApp::setup() {
 	ofSetVerticalSync(false);
 	ofSetCircleResolution(10);
 
+	// OPTIONAL init uct params
+	uct.uct_k = sqrt(2);
 	uct.max_millis = 0;
 	uct.max_iterations = 100;
 	uct.simulation_depth = 5;
@@ -19,15 +21,15 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update(){
 	// run uct mcts on current state and get best action
-	current_action = uct.run(current_state);
+	action = uct.run(state);
 
 	// apply the action to the current state
-	current_state.apply_action(current_action);
+	state.apply_action(action);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	current_state.draw();
+	state.draw();
 
 	// black bg for text
 	ofSetColor(0);
@@ -36,11 +38,11 @@ void ofApp::draw() {
 	// stats
 	stringstream str;
 	str << ofGetFrameRate() << " fps" << endl;
-	str << "total time : " << uct.timer.run_duration_micros() << " us" << endl;
-	str << "avg time : " << uct.timer.avg_loop_duration_micros() << " us" << endl;
-	str << "iterations : " << uct.iterations << endl;
+	str << "total time : " << uct.get_timer().run_duration_micros() << " us" << endl;
+	str << "avg time : " << uct.get_timer().avg_loop_duration_micros() << " us" << endl;
+	str << "iterations : " << uct.get_iterations() << endl;
 	str << "--------------------------------------------" << endl;
-	str << current_state.to_string();
+	str << state.to_string();
 
 	ofSetColor(255);
 	ofDrawBitmapString(str.str(), 10, 15);
@@ -62,7 +64,6 @@ void ofApp::keyPressed(int key){
 		uct.max_iterations = 100 + (key-'0') * 1000;
 		break;
 
-
 	case 'f':
 		ofToggleFullscreen();
 		break;
@@ -72,11 +73,11 @@ void ofApp::keyPressed(int key){
 		break;
 
 	case 'r':
-		current_state.reset();
+		state.reset();
 		break;
 
 	case 'd':
-		current_state.data.do_discrete_random ^= true;
+		state.data.do_discrete_random ^= true;
 		break;
 
 	case 'v':

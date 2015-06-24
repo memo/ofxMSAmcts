@@ -3,13 +3,13 @@
 #include "CircleState.h"
 #include "ofMain.h"
 
-
+using namespace circle;
 
 class ofApp : public ofBaseApp{
 public:
-	circle::State current_state;
-	circle::Action current_action;
-	UCT<circle::State, circle::Action> uct;
+	State state;
+	Action action;
+	UCT<State, Action> uct;
 
 	void setup();
 	void update();

@@ -22,7 +22,7 @@ namespace circle {
 	//--------------------------------------------------------------
 	//--------------------------------------------------------------
 	class State /*: public StateT<Action> */{
-		typedef std::shared_ptr< Action > ActionPtr;
+		//typedef std::shared_ptr< Action > ActionPtr;
 	public:
 
 		//--------------------------------------------------------------
@@ -75,10 +75,11 @@ namespace circle {
 		}
 
 
-		// get a random action
-		void get_random_action(Action& action) const {
+		// get a random action, return false if no actions found
+		bool get_random_action(Action& action) const {
 			if(data.do_discrete_random) action.turn = ofMap(floor(ofRandom(kNumActions)), 0, kNumActions-1, kTurnRangeMin, kTurnRangeMax);
 			else action.turn = ofRandom(kTurnRangeMin, kTurnRangeMax);
+			return true;
 		}
 
 
