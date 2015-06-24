@@ -99,7 +99,7 @@ namespace oxo {
         bool get_random_action(Action& action) const {
             std::vector<Action> actions;
             get_actions(actions);
-            //if(actions.empty()) return false;
+            if(actions.empty()) return false;
 
             action = actions[floor(ofRandom(actions.size()))];
             return true;
