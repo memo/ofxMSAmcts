@@ -1,17 +1,14 @@
 #pragma once
 
 #include "OXOState.h"
-
 #include "ofMain.h"
-
 
 using namespace oxo;
 
-
 class ofApp : public ofBaseApp{
 public:
-	State current_state;
-	Action current_action;
+	State state;
+	Action action;
 	UCT<State, Action> uct;
 
 	void setup();

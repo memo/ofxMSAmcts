@@ -2,48 +2,47 @@
 
 
 
-using namespace msa::mcts;
-
 //--------------------------------------------------------------
 void ofApp::setup() {
-	ofSetBackgroundAuto(false);
+	ofSetBackgroundAuto(true);
 	ofBackground(0);
-	ofSetVerticalSync(false);
-	ofSetCircleResolution(10);
+	ofSetVerticalSync(true);
 
-	uct.max_millis = 0;
-	uct.max_iterations = 100;
-	uct.simulation_depth = 5;
+	// OPTIONAL init uct params
+	uct.uct_k = sqrt(2);
+	uct.max_millis = 20;
+	uct.max_iterations = 0;
+	uct.simulation_depth = 50;
 
 	//msa::LoopTimer::test(10000);
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	// run uct mcts on current state and get best action
-	current_action = uct.run(current_state);
+	if(!state.data.is_terminal) {
+		if(state.data.player_turn == 2) {
+			// run uct mcts on current state and get best action
+			action = uct.run(state);
 
-	// apply the action to the current state
-	current_state.apply_action(current_action);
+			// apply the action to the current state
+			state.apply_action(action);
+		}
+	}
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	current_state.draw();
-
-	// black bg for text
-	ofSetColor(0);
-	ofRect(0, 0, 220, 80);
+	state.draw();
 
 	// stats
 	stringstream str;
 	str << ofGetFrameRate() << " fps" << endl;
-	str << "total time : " << uct.timer.run_duration_micros() << " us" << endl;
-	str << "avg time : " << uct.timer.avg_loop_duration_micros() << " us" << endl;
-	str << "iterations : " << uct.iterations << endl;
+	str << "total time : " << uct.get_timer().run_duration_micros() << " us" << endl;
+	str << "avg time : " << uct.get_timer().avg_loop_duration_micros() << " us" << endl;
+	str << "iterations : " << uct.get_iterations() << endl;
 	str << "--------------------------------------------" << endl;
-	str << current_state.to_string();
+	str << state.to_string();
 
 	ofSetColor(255);
 	ofDrawBitmapString(str.str(), 10, 15);
@@ -65,20 +64,22 @@ void ofApp::keyPressed(int key){
 		uct.max_iterations = 100 + (key-'0') * 1000;
 		break;
 
-
 	case 'f':
 		ofToggleFullscreen();
 		break;
+
 	case 'c':
 		ofBackground(0);
+		break;
 
-		break;
 	case 'r':
-		current_state.reset();
+		state.reset();
 		break;
+
 	case 'd':
-//		current_state.data.do_discrete_random ^= true;
+		//state.data.do_discrete_random ^= true;
 		break;
+
 	case 'v':
 		ofSetVerticalSync(false);
 		break;
@@ -94,8 +95,6 @@ void ofApp::keyPressed(int key){
 	case 'A':
 		ofSetBackgroundAuto(true);
 		break;
-
-
 	}
 }
 
@@ -116,7 +115,14 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	if(!state.data.is_terminal) {
+		int tile_size_x = ofGetWidth()/3;
+		int tile_size_y = ofGetHeight()/3;
+		int tile = floor(x/tile_size_x) + floor(y/tile_size_y) * 3;
 
+		// if that tile is empty, apply it
+		if(state.data.board[tile] == 0) state.apply_action(Action(tile));
+	}
 }
 
 //--------------------------------------------------------------

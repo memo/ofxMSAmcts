@@ -44,7 +44,8 @@ namespace oxo {
 
 		// perform a deep clone of the given state
 		void clone_from(const State& other)  {
-			memcpy(&data, &other.data, sizeof(data));
+			//memcpy(&data, &other.data, sizeof(data));
+			data = other.data;
 		}
 
 		// whether or not this state is terminal (reached end)
@@ -62,6 +63,27 @@ namespace oxo {
 
 			// swap player turn
 			data.player_turn = 3 - data.player_turn;
+
+			// evaluates the state of the board
+			static int winning_combos[8][3] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+
+			for(int i=0; i<8; i++) {
+				// if winning combo found, return win
+				if(data.board[ winning_combos[i][0] ] > 0 && data.board[ winning_combos[i][0] ] == data.board[ winning_combos[i][1] ] && data.board[ winning_combos[i][1] ] == data.board[ winning_combos[i][2] ]) {
+					data.winner = data.board[ winning_combos[i][0] ];
+					data.is_terminal = true;
+					return;
+				}
+			}
+
+			// if no winning combo found
+			// find number of empty tiles (this could be combined with loop above, keeping it separate for readability)
+			std::vector<Action> actions;
+			get_actions(actions);
+			if(actions.empty()) {
+				data.winner = 0;
+				data.is_terminal = true;
+			}
 		}
 
 
@@ -70,43 +92,33 @@ namespace oxo {
 			actions.clear();
 
 			// any tile which is empty is a valid action
-			for(int i=0; i<8; i++) if(data.board[i] == 0) actions.push_back(Action(i));
+			for(int i=0; i<9; i++) if(data.board[i] == 0) actions.push_back(Action(i));
 		}
 
 
-		// get a random action
-		void get_random_action(Action& action) const {
+		// get a random action, return false if no actions found
+		bool get_random_action(Action& action) const {
 			std::vector<Action> actions;
 			get_actions(actions);
+			if(actions.empty()) return false;
+
 			action = actions[floor(ofRandom(actions.size()))];
+			return true;
 		}
 
 
 		// evaluate this state and return a 'value' based on rewards and penalties
 		float evaluate() const  {
-			// evaluates the state of the board according to current player
-			static int winning_combos[8][3] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+			// game still going
+			if(!data.is_terminal) return 0.25;
 
-			int player_id = data.player_turn;
-			for(int i=0; i<8; i++) {
-				// if winning combo found, return win
-				if(winning_combos[i][0] == player_id && winning_combos[i][1] == player_id && winning_combos[i][2] == player_id) {
-					data.is_terminal = true;
-					return 1;
-				}
-			}
+			// draw
+			if(data.winner == 0) return 0.5;
 
-			// if no winning combo found
-			// find number of empty tiles (this could be combined with loop above, keeping it separate for readability)
-			int num_empty = 0;
-			for(int i=0; i<8; i++) if(data.board[i] == 0) num_empty++;
+			// won (evaluation is done after the move, so need to check against other player)
+			if(data.winner == 3 - data.player_turn) return 1;
 
-			// return draw if no empty spaces found
-			if(num_empty == 0) {
-				data.is_terminal = true;
-				return 0.5;
-			}
-
+			// lost
 			return 0;
 		}
 
@@ -114,7 +126,9 @@ namespace oxo {
 		// return state as string (for debug purposes)
 		std::string to_string() const  {
 			stringstream str;
-			//str << " : " << endl;
+			str << "player_turn:" << data.player_turn << ", ";
+			str << "is_terminal:" << data.is_terminal << ", ";
+			str << "winner:" << data.winner << ", ";
 			return str.str();
 		}
 
@@ -125,17 +139,21 @@ namespace oxo {
 		// POD containing data about state that's safe to memcpy
 		struct {
 			int player_turn;	// which players turn it is, 1 or 2
-			mutable bool is_terminal;	// whether state is terminal or not
-			int board[8];		// 0: empty, 1: player 1, 2: player2
+			bool is_terminal;	// whether state is terminal or not
+			int winner;			// who won
+			int board[9];		// 0: empty, 1: player 1, 2: player2
 		} data;
 
 		void reset() {
 			data.player_turn = 1;
 			data.is_terminal = false;
-			for(int i=0; i<8; i++) data.board[i] = 0;
+			data.winner = 0;
+			for(int i=0; i<9; i++) data.board[i] = 0;
 		}
 
 		void draw() {
+			ofPushStyle();
+			ofNoFill();
 			ofBackground(150);
 			float w = ofGetWidth();
 			float h = ofGetHeight();
@@ -149,13 +167,15 @@ namespace oxo {
 			ofLine(tile_w, 0, tile_w, h);
 			ofLine(2 * tile_w, 0, 2 * tile_w, h);
 
-			for(int i=0; i<3; i++) {
-				for(int j=0; j<3; j++) {
-					ofRectangle tile_rect(i*tile_w, j*tile_h, tile_w, tile_h);
-					if(data.board[i]==1) draw_o(tile_rect, 0.8);
-					else if(data.board[i]==1) draw_x(tile_rect, 0.8);
-				}
+			for(int c=0; c<9; c++) {
+				int i = c % 3;
+				int j = c / 3;
+				ofRectangle tile_rect(i*tile_w, j*tile_h, tile_w, tile_h);
+				float size = 0.7;
+				if(data.board[c]==1) draw_o(tile_rect, size);
+				else if(data.board[c]==2) draw_x(tile_rect, size);
 			}
+			ofPopStyle();
 		}
 
 		static void draw_x(ofRectangle rect, float scale) {
