@@ -34,6 +34,7 @@ namespace msa {
 
             //--------------------------------------------------------------
             UCT() :
+				iterations(0),
                 uct_k( sqrt(2) ), 
                 max_iterations( 100 ),
                 max_millis( 0 ),
@@ -138,6 +139,8 @@ namespace msa {
                         }
                     }
 
+					// set turn to player for score evaluation
+					state.data.player_turn = 2;
                     float value = state.evaluate();
 
                     // 4. BACK PROPAGATION
