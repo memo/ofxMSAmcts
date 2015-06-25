@@ -54,6 +54,11 @@ namespace circle {
             return false;
         }
 
+        //  agent id (zero-based) for agent who is about to make a decision
+        int agent_id() const {
+            return 0;
+        }
+
         // apply action to state
         void apply_action(const Action& action)  {
             data.vel.rotate(action.turn);
