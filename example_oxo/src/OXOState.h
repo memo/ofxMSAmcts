@@ -118,21 +118,36 @@ namespace oxo {
 		}
 
 
-		// evaluate this state and return a 'value' based on rewards and penalties
-		float evaluate() const  {
+		// evaluate this state and return a vector of rewards (for each agent)
+		const vector<float> evaluate() const  {
+			vector<float> rewards(2);
 
 			if(data.is_terminal) {
+				// could be written more compact, but this is more readable
+				switch(data.winner) {
 
-				// draw
-				if(data.winner == 0) return 0.5;
+				case kNone: // draw
+					rewards[kPlayer1] = rewards[kPlayer2] = 0.5;
+					break;
 
-				// won 
-				if(data.winner == data.player_turn) return 1;
-				else return 0;	// lost
+				case kPlayer1: // player 1 wins
+					rewards[kPlayer1] = 1;
+					rewards[kPlayer2] = 0;
+					break;
+
+				case kPlayer2: // player 2 wins
+					rewards[kPlayer1] = 0;
+					rewards[kPlayer2] = 1;
+					break;
+				default:
+					//assert(0);
+					break;
+				}
+			} else {
+				// game still going
+				rewards[kPlayer1] = rewards[kPlayer2] = 0.0;
 			}
-
-			// game still going
-			return 0.25;
+			return rewards;
 		}
 
 

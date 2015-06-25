@@ -139,9 +139,11 @@ namespace msa {
                         }
                     }
 
-					// set turn to player for score evaluation
-					state.data.player_turn = 2;
-                    float value = state.evaluate();
+                    // get rewards vector for all agents
+                    const vector<float> rewards = state.evaluate();
+
+					// reward for agent about to make a decision
+					float value = rewards[root_node.get_state().agent_id()];
 
                     // 4. BACK PROPAGATION
                     while(node) {

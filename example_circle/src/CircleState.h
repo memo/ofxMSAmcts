@@ -88,8 +88,10 @@ namespace circle {
         }
 
 
-        // evaluate this state and return a 'value' based on rewards and penalties
-        float evaluate() const  {
+        // evaluate this state and return a vector of rewards (for each agent)
+        const vector<float> evaluate() const  {
+            vector<float> rewards(1);
+
             // try to be a circle with diameter desired_distance
             float desired_distance = min(min(ofGetMouseX(), ofGetMouseY()), min(ofGetWidth() - ofGetMouseX(), ofGetHeight() - ofGetMouseY()));
             if(desired_distance < 1) desired_distance = 1;
@@ -101,7 +103,8 @@ namespace circle {
             // score based on avg_pos being in center
             float avg_pos_score = 1.0f - data.avg_pos.distance(center) / desired_distance;
 
-            return distance_score + avg_pos_score * 0.5;
+            rewards[0] = distance_score + avg_pos_score * 0.5;
+            return rewards;
         }
 
 
