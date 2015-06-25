@@ -28,6 +28,7 @@ namespace msa {
                 state(state),
                 action(),
                 parent(parent),
+				agent_id(state.agent_id()),
                 num_visits(0),
                 value(0),
                 depth(parent ? parent->depth + 1 : 0)
@@ -60,8 +61,8 @@ namespace msa {
 
 
             //--------------------------------------------------------------
-            void update(float value) {
-                this->value += value;
+            void update(const std::vector<float>& rewards) {
+                this->value += rewards[agent_id];
                 num_visits++;
             }
 
@@ -102,6 +103,7 @@ namespace msa {
             State state;			// the state of this TreeNode
             Action action;			// the action which led to the state of this TreeNode
             TreeNodeT* parent;		// parent of this TreeNode
+			int agent_id;			// agent who made the decision
 
             int num_visits;			// number of times TreeNode has been visited
             float value;			// value of this TreeNode

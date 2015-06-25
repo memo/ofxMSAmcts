@@ -143,11 +143,11 @@ namespace msa {
                     const vector<float> rewards = state.evaluate();
 
 					// reward for agent about to make a decision
-					float value = rewards[root_node.get_state().agent_id()];
+					//float value = rewards[root_node.get_state().agent_id()];
 
                     // 4. BACK PROPAGATION
                     while(node) {
-                        node->update(value);
+                        node->update(rewards);
                         node = node->get_parent();
                     }
 
