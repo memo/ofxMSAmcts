@@ -139,9 +139,9 @@ namespace oxo {
 		// return state as string (for debug purposes)
 		std::string to_string() const  {
 			stringstream str;
-			str << "player_turn:" << data.player_turn << ", ";
+			str << "player_turn:" << player_to_string(data.player_turn) << "(" << data.player_turn << "), ";
 			str << "is_terminal:" << data.is_terminal << ", ";
-			str << "winner:" << data.winner << ", ";
+			str << "winner:" << player_to_string(data.winner) << "(" << data.winner << "), ";
 			return str.str();
 		}
 
