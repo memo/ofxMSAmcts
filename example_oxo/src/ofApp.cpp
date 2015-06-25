@@ -10,17 +10,18 @@ void ofApp::setup() {
 
     // OPTIONAL init uct params
     uct.uct_k = sqrt(2);
-    uct.max_millis = 20;
-    uct.max_iterations = 0;
-    uct.simulation_depth = 50;
+    uct.max_millis = 0;
+    uct.max_iterations = 1000;
+    uct.simulation_depth = 1000;
 
     //msa::LoopTimer::test(10000);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    // if game is not over, and player 2 is about to play
     if(!state.data.is_terminal) {
-        if(state.data.player_turn == 2) {
+        if(state.agent_id() == kPlayer2) {
             // run uct mcts on current state and get best action
             action = uct.run(state);
 
@@ -115,13 +116,17 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if(!state.data.is_terminal) {
-        int tile_size_x = ofGetWidth()/3;
-        int tile_size_y = ofGetHeight()/3;
-        int tile = floor(x/tile_size_x) + floor(y/tile_size_y) * 3;
 
-        // if that tile is empty, apply it
-        if(state.data.board[tile] == 0) state.apply_action(Action(tile));
+    // if game is not over, and player 1 is about to play
+    if(!state.data.is_terminal) {
+        if(state.agent_id() == kPlayer1) {
+            int tile_size_x = ofGetWidth()/3;
+            int tile_size_y = ofGetHeight()/3;
+            int tile = floor(x/tile_size_x) + floor(y/tile_size_y) * 3;
+
+            // if that tile is empty, apply it
+            if(state.data.board[tile] == kNone) state.apply_action(Action(tile));
+        }
     }
 }
 

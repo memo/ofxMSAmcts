@@ -18,6 +18,11 @@ namespace oxo {
 		int tile;	// tile to place move in, 0..8, 0: top left, 8: bottom right
 	};
 
+	
+#define kNone		-1
+#define kPlayer1	0
+#define kPlayer2	1
+
 	//--------------------------------------------------------------
 	//--------------------------------------------------------------
 	class State /*: public StateT<Action> */{
@@ -52,6 +57,11 @@ namespace oxo {
 			return data.is_terminal;
 		}
 
+		//  agent id (zero-based) for agent who is about to make a decision
+		int agent_id() const {
+			return data.player_turn;
+		}
+
 		// apply action to state
 		void apply_action(const Action& action)  {
 			// sanity check
@@ -61,14 +71,14 @@ namespace oxo {
 			data.board[action.tile] = data.player_turn;
 
 			// swap player turn
-			data.player_turn = 3 - data.player_turn;
+			data.player_turn = 1 - data.player_turn;
 
 			// update game state
 			static int win_combo[8][3] = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
 
 			for(int i=0; i<8; i++) {
 				// if winning combo found,
-				if(data.board[ win_combo[i][0] ] > 0 && data.board[ win_combo[i][0] ] == data.board[ win_combo[i][1] ] && data.board[ win_combo[i][1] ] == data.board[ win_combo[i][2] ]) {
+				if(data.board[ win_combo[i][0] ] > kNone && data.board[ win_combo[i][0] ] == data.board[ win_combo[i][1] ] && data.board[ win_combo[i][1] ] == data.board[ win_combo[i][2] ]) {
 					data.winner = data.board[ win_combo[i][0] ];
 					data.is_terminal = true;
 					return;
@@ -78,9 +88,9 @@ namespace oxo {
 			// if no winning combo found
 			// find number of empty tiles
 			int num_empty = 0;
-			for(int i=0; i<9; i++) if(data.board[i] == 0) num_empty++;
+			for(int i=0; i<9; i++) if(data.board[i] == kNone) num_empty++;
 			if(num_empty == 0) {
-				data.winner = 0;
+				data.winner = kNone;
 				data.is_terminal = true;
 			}
 		}
@@ -91,7 +101,7 @@ namespace oxo {
 			actions.clear();
 
 			// any tile which is empty is a valid action
-			for(int i=0; i<9; i++) if(data.board[i] == 0) actions.push_back(Action(i));
+			for(int i=0; i<9; i++) if(data.board[i] == kNone) actions.push_back(Action(i));
 		}
 
 
@@ -141,17 +151,25 @@ namespace oxo {
 
 		// POD containing data about state that's safe to memcpy
 		struct {
-			int player_turn;	// which players turn it is, 1 or 2
+			int player_turn;	// which players turn it is, kPlayer1 or kPlayer2
 			bool is_terminal;	// whether state is terminal or not
-			int winner;			// who won
-			int board[9];		// 0: empty, 1: player 1, 2: player2
+			int winner;			// who won: kNone (draw), kPlayer1 or kPlayer2
+			int board[9];		// who is on each tile: kNone, kPlayer1 or kPlayer2
 		} data;
 
+		string player_to_string(int player_id) const {
+			switch(player_id) {
+				case kNone: return "None";
+				case kPlayer1: return "Player 1";
+				case kPlayer2: return "Player 2";
+			}
+		}
+
 		void reset() {
-			data.player_turn = 1;
+			data.player_turn = kPlayer1;
 			data.is_terminal = false;
-			data.winner = 0;
-			for(int i=0; i<9; i++) data.board[i] = 0;
+			data.winner = kNone;
+			for(int i=0; i<9; i++) data.board[i] = kNone;
 		}
 
 		void draw() {
@@ -175,8 +193,8 @@ namespace oxo {
 				int j = c / 3;
 				ofRectangle tile_rect(i*tile_w, j*tile_h, tile_w, tile_h);
 				float size = 0.7;
-				if(data.board[c]==1) draw_o(tile_rect, size);
-				else if(data.board[c]==2) draw_x(tile_rect, size);
+				if(data.board[c]==kPlayer1) draw_o(tile_rect, size);
+				else if(data.board[c]==kPlayer2) draw_x(tile_rect, size);
 			}
 			ofPopStyle();
 		}
