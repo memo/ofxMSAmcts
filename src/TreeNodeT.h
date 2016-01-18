@@ -17,10 +17,7 @@ namespace msa {
 
         template <class State, typename Action>
         class TreeNodeT {
-
             typedef std::shared_ptr< TreeNodeT<State, Action> > TreeNodePtr;
-            //typedef std::shared_ptr< State > StatePtr;
-            //typedef std::shared_ptr< Action > ActionPtr;
 
         public:
             //--------------------------------------------------------------
@@ -51,7 +48,6 @@ namespace msa {
                     state.get_actions(actions);
 
                     // randomize the order
-                    // QUESTION: should I use a RandomGenerator with particular distribution?
                     std::random_shuffle(actions.begin(), actions.end());
                 }
 

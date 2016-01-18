@@ -45,6 +45,11 @@ void ofApp::draw() {
     str << "--------------------------------------------" << endl;
     str << state.to_string();
 
+	if (state.is_terminal()) {
+		str << endl << endl;
+		str << "Game Over. Press 'r' to restart." << endl;
+	}
+
     ofSetColor(255);
     ofDrawBitmapString(str.str(), 10, 15);
 }

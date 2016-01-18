@@ -6,18 +6,15 @@ MCTS Code Based on the Java (Simon Lucas - University of Essex) and Python (Pete
 
 #pragma once
 
-//#include <random>
-
-//#include "StateT.h"
 #include "TreeNodeT.h"
-//#include "Action.h"
-//#include "State.h"
 #include "MSALoopTimer.h"
 
 
 namespace msa {
     namespace mcts {
 
+		// State must comply with State Interface (see IState.h)
+		// Action can be anything (which your State class knows how to handle)
         template <class State, typename Action>
         class UCT {
             typedef TreeNodeT<State, Action> TreeNode;

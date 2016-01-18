@@ -10,7 +10,7 @@ using namespace msa::mcts;
 namespace circle {
     //--------------------------------------------------------------
     //--------------------------------------------------------------
-    struct Action /*: public ActionBase */{
+    struct Action {
         float turn;
     };
 
@@ -21,7 +21,7 @@ namespace circle {
 
     //--------------------------------------------------------------
     //--------------------------------------------------------------
-    class State /*: public StateT<Action> */{
+    class State {
         //typedef std::shared_ptr< Action > ActionPtr;
     public:
 
@@ -131,7 +131,7 @@ namespace circle {
 
         void reset() {
             data.pos.set(ofGetWidth()/2, ofGetHeight()/2);
-            data.vel.set(0, 4);
+            data.vel.set(0, 10);
             data.frame_num = 0;
             data.avg_pos.set(data.pos);
         }
