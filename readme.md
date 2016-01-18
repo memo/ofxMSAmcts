@@ -2,9 +2,9 @@ A very simple C++11 Templated MCTS (Monte Carlo Tree Search) implementation with
 
 MCTS Code Based on the Java (Simon Lucas - University of Essex) and Python (Peter Cowling, Ed Powley, Daniel Whitehouse - University of York) impelementations at http://mcts.ai/code/index.html
 
-The code is not tailored for any specific use case. It's very generic (but perhaps not generic enough).
-It's not optimized, and priority is on readability and flexibility (I wrote it to understand MCTS).
-It supports variable number of actions per step and is templated. See examples for how to design your 'State' and 'Action' classes.
+The code is not tailored for any specific use case. It's very generic (but perhaps not generic enough?)
+It's probably not very optimized, my priority was on readability and flexibility (I wrote it to understand MCTS).
+It supports variable number of agents, and variable number of actions per step, and is templated. See examples for how to design your 'State' and 'Action' classes.
 
 # Usage
         State state;            // contains the current state, it must comply with the State interface
@@ -31,6 +31,6 @@ It supports variable number of actions per step and is templated. See examples f
 None (C++11)
 
 ## Examples
-openFrameworks 0.8.4
+openFrameworks 0.9.0
 
-should work on any platform, but project files currently exist only for only VS2012
+should work on any platform, but project files currently exist only for Windows / VS2015
