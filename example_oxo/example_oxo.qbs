@@ -12,9 +12,7 @@ Project{
         name: { return FileInfo.baseName(path) }
 
         files: [
-            'src/main.cpp',
-            'src/ofApp.cpp',
-            'src/ofApp.h',
+            'src/*',
         ]
 
         // This project is using addons.make to include the addons
@@ -22,10 +20,9 @@ Project{
         // the addons from the qbs file change the following lines to
         // the list of used addons in array format. eg:
         //
-        // of.addons: [
-        //     'ofxGui',
-        //     'ofxOpenCv',
-        // ]
+        of.addons: [
+            'ofxMSAmcts',
+        ]
 
         // additional flags for the project. the of module sets some
         // flags by default to add the core libraries, search paths...
