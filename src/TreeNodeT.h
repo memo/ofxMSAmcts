@@ -10,7 +10,7 @@ Only contains information / methods related to State, Action, Parent, Children e
 #include <memory>
 #include <math.h>
 #include <vector>
-
+#include <algorithm>
 
 namespace msa {
     namespace mcts {

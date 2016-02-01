@@ -8,7 +8,7 @@ MCTS Code Based on the Java (Simon Lucas - University of Essex) and Python (Pete
 
 #include "TreeNodeT.h"
 #include "MSALoopTimer.h"
-
+#include <cfloat>
 
 namespace msa {
     namespace mcts {
@@ -137,7 +137,7 @@ namespace msa {
                     }
 
                     // get rewards vector for all agents
-                    const vector<float> rewards = state.evaluate();
+                    const std::vector<float> rewards = state.evaluate();
 
 					// reward for agent about to make a decision
 					//float value = rewards[root_node.get_state().agent_id()];
