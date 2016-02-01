@@ -29,8 +29,14 @@ apps/*
 [Bb]uild/
 [Oo]bj/
 *.o
-[Dd]ebug*/
-[Rr]elease*/
+examples/**/[Dd]ebug*/
+examples/**/[Rr]elease*/
+examples/**/gcc-debug/
+examples/**/gcc-release/
+tests/**/[Dd]ebug*/
+tests/**/[Rr]elease*/
+tests/**/gcc-debug/
+tests/**/gcc-release/
 *.mode*
 *.app/
 *.pyc
@@ -72,6 +78,19 @@ ipch/
 local.properties
 .externalToolBuilders
 
+# Android Studio
+.idea
+.gradle
+gradle
+gradlew
+gradlew.bat
+
+# QtCreator
+*.qbs.user
+*.pro.user
+*.pri
+
+
 #########################
 # operating system
 #########################
@@ -107,5 +126,3 @@ Desktop.ini
 #########################
 
 .mailmap
-*/bin/
-*.opendb
