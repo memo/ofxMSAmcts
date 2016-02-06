@@ -96,7 +96,7 @@ namespace msa {
 
 
             //--------------------------------------------------------------
-            Action run(const State& current_state, unsigned int seed = 1) {
+            Action run(const State& current_state, unsigned int seed = 1, vector<State>* explored_states = nullptr) {
                 // initialize timer
                 timer.init();
 
@@ -139,8 +139,8 @@ namespace msa {
                     // get rewards vector for all agents
                     const std::vector<float> rewards = state.evaluate();
 
-					// reward for agent about to make a decision
-					//float value = rewards[root_node.get_state().agent_id()];
+                    // add to history
+                    if(explored_states) explored_states->push_back(state);
 
                     // 4. BACK PROPAGATION
                     while(node) {

@@ -17,7 +17,7 @@ namespace msa {
 
         template <class State, typename Action>
         class TreeNodeT {
-            typedef std::shared_ptr< TreeNodeT<State, Action> > TreeNodePtr;
+            typedef std::shared_ptr< TreeNodeT<State, Action> > Ptr;
 
         public:
             //--------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace msa {
             float value;			// value of this TreeNode
             int depth;
 
-            std::vector< TreeNodePtr > children;	// all current children
+            std::vector< Ptr > children;	// all current children
             std::vector< Action > actions;			// possible actions from this state
 
 
@@ -122,7 +122,7 @@ namespace msa {
                 child_node->state.apply_action(new_action);
 
                 // add to children
-                children.push_back(TreeNodePtr(child_node));
+                children.push_back(Ptr(child_node));
 
                 return child_node;
             }
