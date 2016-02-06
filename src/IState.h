@@ -20,19 +20,9 @@ class Action {
 
 class State {
 
-    // perform a deep clone of the given state
-    State(const State& other) {
-        clone_from(other);
-    }
-
-    // perform a deep clone of the given state
-    State& operator = (const State& other) {
-        clone_from(other);
-        return *this;
-    }
-
-    // perform a deep clone of the given state
-    void clone_from(const State& other);
+    // copy and assignment operators should perform a DEEP clone of the given state
+    State(const State& other);
+    State& operator = (const State& other);
 
     // whether or not this state is terminal (reached end)
     bool is_terminal() const;

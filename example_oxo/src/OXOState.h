@@ -35,21 +35,11 @@ public:
         reset();
     }
 
-    // perform a deep clone of the given state
-    State(const State& other)  {
-        clone_from(other);
-    }
+    // default constructors will do
+    // copy and assignment operators should perform a DEEP clone of the given state
+    //    State(const State& other);
+    //    State& operator = (const State& other);
 
-    // perform a deep clone of the given state
-    State& operator = (const State& other ) {
-        clone_from(other);
-        return *this;
-    }
-
-    // perform a deep clone of the given state
-    void clone_from(const State& other)  {
-        memcpy(&data, &other.data, sizeof(data));
-    }
 
     // whether or not this state is terminal (reached end)
     bool is_terminal() const  {
@@ -163,7 +153,6 @@ public:
     //--------------------------------------------------------------
     // IMPLEMENTATION SPECIFIC
 
-    // POD containing data about state that's safe to memcpy
     struct {
         int player_turn;	// which players turn it is, kPlayer1 or kPlayer2
         bool is_terminal;	// whether state is terminal or not
